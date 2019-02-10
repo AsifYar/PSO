@@ -3,6 +3,8 @@ import breeze.linalg._
 
 class empty_Particle(dimension :Int) {
 
+  //Creates empty particle
+
   var Position =      DenseVector[Double](dimension)
   var Velocity =      DenseVector[Double](dimension)
   var Cost =          math.random
