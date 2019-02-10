@@ -4,7 +4,7 @@ import breeze.linalg._
 import breeze.numerics._
 class Problem {
 
-  def Sphere(x :scala.collection.immutable.Vector[Double]) : Double = {
+  def Sphere(x :DenseVector[Double]) : Double = {
 
     //takes an element and first square it than sums it
 

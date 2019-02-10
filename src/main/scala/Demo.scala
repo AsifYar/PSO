@@ -1,11 +1,16 @@
 import breeze.linalg._
+import scalalab.JavaUtilities
+import breeze.linalg.{max, sum}
+import java.util.concurrent.ThreadLocalRandom
+import breeze.math.Complex.scalar
+import scala.collection.mutable.ArrayBuffer
 object Demo {
   import java.util.concurrent.ThreadLocalRandom
   import scala.collection.mutable.ArrayBuffer
 
   def main(args: Array[String]): Unit = {
 
-    var problem = new Problem()
+    var problem = new Demoroblem()
 
     //def CostFunction(x : Vector[Double]) =null
 
@@ -40,13 +45,9 @@ object Demo {
 
     scala.io.StdIn.readLine()
 
-    var w: Double = chi //Inertia
-    val c1 = chi * phi1
-    val c2 = chi * phi2
-    val wdump = 1
-
-
-    var a = 123;
+    var w = chi //Inertia
+    var c1 = chi * phi1
+    var c2 = chi * phi2
 
 
 
@@ -57,13 +58,13 @@ object Demo {
     //Initialization
 
     val random: ThreadLocalRandom = ThreadLocalRandom.current();
-    var particle = new ArrayBuffer[empty_Particle](nPop) //create a particle from empty_Particle structure / class
+    var particle = new ArrayBuffer[Demoempty](nPop) //create a particle from empty_Particle structure / class
 
     var GlobalBest_Cost = Double.PositiveInfinity
     var GlobalBest_Position = scala.collection.immutable.Vector.fill(nvar)(math.random)
 
     for (i <- 0 to nPop) {
-      particle.append(new empty_Particle(nvar))
+      particle.append(new Demoempty(nvar))
       particle(i).Position = scala.collection.immutable.Vector.fill(nvar)(random.nextDouble(MinVal, MaxVal + 1)) //Array.fill(nvar) (random.nextDouble(MinVal , MaxVal + 1))
       particle(i).Cost =problem.Sphere(particle(i).Position)
       particle(i).Velocity = scala.collection.immutable.Vector.fill(nvar)(0.0)
@@ -84,15 +85,16 @@ object Demo {
     import breeze.linalg.{max, min}
 
 
+
     for (iteration: Int <- 0 to MaxIt-1) // for all iteration
     {
       for (i <- 0 to nPop-1) //for every member of population/swarm we have to iterate
       {
 
         //update velocity
-        particle(i).Velocity = (w * particle(i).Velocity) +
-          c1 * Vector.fill(nvar)(math.random) .* (particle(i).BestPosition - particle(i).Position) +
-          c2 * Vector.fill(nvar)(math.random) .* (GlobalBest_Position - particle(i).Position)
+        particle(i).Velocity =sum( (w * particle(i).Velocity) ,
+          (c1 * Vector.fill(nvar)(math.random) .* (particle(i).BestPosition - particle(i).Position)) ,(
+          c2 * Vector.fill(nvar)(math.random) .* (GlobalBest_Position - particle(i).Position)))
 
         //Limits for Velocity
         //particle(i).Velocity = particle(i).Velocity.min(MaxVelocity)
@@ -102,7 +104,7 @@ object Demo {
 
 
         //update position
-        particle(i).Position = particle(i).Position + particle(i).Velocity
+        particle(i).Position = sum(particle(i).Position ,particle(i).Velocity)
 
         //Apply upper and lower bound limits to position of particle
         //position of particle(i) should not less than lower bound
@@ -128,7 +130,7 @@ object Demo {
       }
 
       println("Best Cost of Iteration:" + iteration + " is= " + GlobalBest_Cost)
-      w = w * wdump
+
     }
     println("Global Best Cost :" + GlobalBest_Cost)
     println("Global Best Position :" + GlobalBest_Position)

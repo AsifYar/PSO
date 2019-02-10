@@ -50,9 +50,6 @@ object PSO {
     val wdump = 1
 
 
-    var a = 123;
-
-
 
     //Define Max and min velocity for particle
     var MaxVelocity:Double = 0.2 * (MaxVal - MinVal)
