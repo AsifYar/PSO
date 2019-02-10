@@ -4,23 +4,25 @@ object SpherePSO {
 
   def main(args: Array[String]): Unit = {
     import java.util.concurrent.ThreadLocalRandom
-    import breeze.math.Complex.scalar
     import scala.collection.mutable.ArrayBuffer
-
 
     var problem = new Problem()
 
-
     //Problem Definition
-    println("***Enter values for follwoing arguments***")
+    println("***Sphere function optimization with PSO***")
+    println("***Enter values for following arguments***")
+    println()
+    print("Enter Lower Bound (Recommended value= -5.12) = ")
+    var MinVal = scala.io.StdIn.readDouble();
+    println()
+    print("Enter Upper Bound (Recommended value= 5.12) = ")
+    var MaxVal = scala.io.StdIn.readDouble();
     println()
     print("Number of Dimensions(d) = ")
     var nvar = scala.io.StdIn.readInt(); //Dimensions ; Number of unknown Decision variables
     println("Number of Dimensions(d) = " + nvar)
-    var VarSize = DenseVector[Double](nvar) //Matrix containing solution
-
-    var MinVal = -512; //Lower Bound of Decision variables
-    var MaxVal = 512 //Upper Bound of Decision variables
+    //var MinVal = -512; //Lower Bound of Decision variables
+    //var MaxVal = 512 //Upper Bound of Decision variables
 
     //Parameters for PSO
 
@@ -38,15 +40,12 @@ object SpherePSO {
     var nPop = scala.io.StdIn.readInt() //Population Size (Swarm Size)
     println("Population (SWARM) Size = " + nPop)
     println()
-    println("Press any key to continue")
-
+    println("Press any key to Start")
     scala.io.StdIn.readLine()
 
     var w: Double = chi //Inertia
     val c1 = chi * phi1
     val c2 = chi * phi2
-    val wdump = 1
-
 
 
     //Define Max and min velocity for particle
@@ -79,9 +78,7 @@ object SpherePSO {
         GlobalBest_Position = particle(i).BestPosition
       }
     }
-
     //Main loop of PSO
-
 
     for (iteration: Int <- 0 to MaxIt-1) // for all iteration
     {
@@ -97,7 +94,6 @@ object SpherePSO {
 
         particle(i).Velocity = max(particle(i).Velocity, MinVelocity)
         particle(i).Velocity = min(particle(i).Velocity, MaxVelocity)
-
 
         //update position
         particle(i).Position = particle(i).Position + particle(i).Velocity
@@ -124,20 +120,12 @@ object SpherePSO {
           }
         }
       }
-
-      println("Best Cost of Iteration:" + iteration + " is= " + GlobalBest_Cost)
-      w = w * wdump
     }
     println("Global Best Cost :" + GlobalBest_Cost)
     println("Global Best Position :" + GlobalBest_Position)
 
-
     for (x <- 0 to nPop - 1) {
-      println("particle " + x + " Position=" + particle(x).Position + " : Cost=" + particle(x).Cost + " : Velocity=" + particle(x).Velocity + " : Best Position=" + particle(x).BestPosition + " : BestCost=" + particle(x).BestCost)
+      println("particle " + x + " Current Position=" + particle(x).Position + " : Cost=" + particle(x).Cost + " : Velocity=" + particle(x).Velocity + " : Best Position=" + particle(x).BestPosition + " : BestCost=" + particle(x).BestCost)
     }
-
-    //  var BestCost = Array.fill(MaxIt,1)(0)//crreate array with one column and MaxIt rows
-
   }
-
 }

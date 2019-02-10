@@ -9,15 +9,21 @@ object AckleyPSO {
     var problem = new Problem()
 
     //Problem Definition
-    println("***Enter values for follwoing arguments***")
+    println("***Ackley function optimization with PSO***")
+    println("***Enter values for following arguments***")
+    println()
+    print("Enter Lower Bound (Recommended value= -32.768) = ")
+    var MinVal = scala.io.StdIn.readDouble();
+    println()
+    print("Enter Upper Bound (Recommended value= 32.768) = ")
+    var MaxVal = scala.io.StdIn.readDouble();
     println()
     print("Number of Dimensions(d) = ")
     var nvar = scala.io.StdIn.readInt(); //Dimensions ; Number of unknown Decision variables
     println("Number of Dimensions(d) = " + nvar)
-    var VarSize = DenseVector[Double](nvar) //Matrix containing solution
 
-    var MinVal = -512; //Lower Bound of Decision variables
-    var MaxVal = 512 //Upper Bound of Decision variables
+    //var MinVal = -512; //Lower Bound of Decision variables
+    //var MaxVal = 512 //Upper Bound of Decision variables
 
     //Parameters for PSO
 
@@ -59,7 +65,7 @@ object AckleyPSO {
     for (i <- 0 to nPop) {
       particle.append(new empty_Particle(nvar))
       particle(i).Position = DenseVector.fill(nvar)(random.nextDouble(MinVal, MaxVal + 1)) //Array.fill(nvar) (random.nextDouble(MinVal , MaxVal + 1))
-      particle(i).Cost =problem.Sphere(particle(i).Position)
+      particle(i).Cost =problem.Ackley(particle(i).Position)
       particle(i).Velocity = DenseVector.fill(nvar)(0.0)
 
       //update personal best
@@ -99,7 +105,7 @@ object AckleyPSO {
         particle(i).Position = max( particle(i).Position,MinVal.toDouble) //Lower bound
         particle(i).Position = min( particle(i).Position,MaxVal.toDouble) //upper bound
         //Evaluation
-        particle(i).Cost = problem.Sphere(particle(i).Position)
+        particle(i).Cost = problem.Ackley(particle(i).Position)
         //update personal best
         if (particle(i).Cost < particle(i).BestCost) //check for best cost and position till now gained by particle
         {
@@ -113,12 +119,11 @@ object AckleyPSO {
           }
         }
       }
-      println("Best Cost of Iteration:" + iteration + " is= " + GlobalBest_Cost)
     }
     println("Global Best Cost :" + GlobalBest_Cost)
     println("Global Best Position :" + GlobalBest_Position)
     for (x <- 0 to nPop - 1) {
-      println("particle " + x + " Position=" + particle(x).Position + " : Cost=" + particle(x).Cost + " : Velocity=" + particle(x).Velocity + " : Best Position=" + particle(x).BestPosition + " : BestCost=" + particle(x).BestCost)
+      println("particle " + x + " Current Position=" + particle(x).Position + " : Cost=" + particle(x).Cost + " : Velocity=" + particle(x).Velocity + " : Best Position=" + particle(x).BestPosition + " : BestCost=" + particle(x).BestCost)
     }
   }
 

@@ -19,12 +19,9 @@ class Problem {
     val b=0.2
     val c=2 * constants.Pi
     var cols =x.length;
-    println(cols)
     var inverseCols = 1.0/cols
-    println(inverseCols)
     val power = x.map(math.pow(_, 2))
     var sum1  = sum(power)
-    println(sum1)
     var y =  -a * exp(-b * sqrt(inverseCols * sum1)) -  exp(inverseCols * sum(cos(c * x))) +a + constants.E
     y
   }
