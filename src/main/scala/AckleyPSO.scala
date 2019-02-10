@@ -1,17 +1,12 @@
 import breeze.linalg._
-import scalalab.JavaUtilities
 import breeze.linalg.{max, sum}
-object PSO {
-
+object AckleyPSO {
   def main(args: Array[String]): Unit = {
     import java.util.concurrent.ThreadLocalRandom
-    import breeze.math.Complex.scalar
     import scala.collection.mutable.ArrayBuffer
 
 
     var problem = new Problem()
-
-    def CostFunction(x : DenseVector[Double]) =null
 
     //Problem Definition
     println("***Enter values for follwoing arguments***")
@@ -47,9 +42,6 @@ object PSO {
     var w: Double = chi //Inertia
     val c1 = chi * phi1
     val c2 = chi * phi2
-    val wdump = 1
-
-
 
     //Define Max and min velocity for particle
     var MaxVelocity:Double = 0.2 * (MaxVal - MinVal)
@@ -62,6 +54,7 @@ object PSO {
 
     var GlobalBest_Cost = Double.PositiveInfinity
     var GlobalBest_Position = DenseVector.fill(nvar)(math.random)
+
 
     for (i <- 0 to nPop) {
       particle.append(new empty_Particle(nvar))
@@ -83,7 +76,6 @@ object PSO {
 
     //Main loop of PSO
 
-
     for (iteration: Int <- 0 to MaxIt-1) // for all iteration
     {
       for (i <- 0 to nPop-1) //for every member of population/swarm we have to iterate
@@ -102,21 +94,17 @@ object PSO {
 
         //update position
         particle(i).Position = particle(i).Position + particle(i).Velocity
-
         //Apply upper and lower bound limits to position of particle
         //position of particle(i) should not less than lower bound
         particle(i).Position = max( particle(i).Position,MinVal.toDouble) //Lower bound
         particle(i).Position = min( particle(i).Position,MaxVal.toDouble) //upper bound
-
         //Evaluation
         particle(i).Cost = problem.Sphere(particle(i).Position)
-
         //update personal best
         if (particle(i).Cost < particle(i).BestCost) //check for best cost and position till now gained by particle
         {
           particle(i).BestPosition = particle(i).Position;
           particle(i).BestCost = particle(i).Cost
-
           //if ith particle is better than its best,it is probability it will be best than Global Best
 
           if (particle(i).BestCost < GlobalBest_Cost) {
@@ -125,20 +113,13 @@ object PSO {
           }
         }
       }
-
       println("Best Cost of Iteration:" + iteration + " is= " + GlobalBest_Cost)
-      w = w * wdump
     }
     println("Global Best Cost :" + GlobalBest_Cost)
     println("Global Best Position :" + GlobalBest_Position)
-
-
     for (x <- 0 to nPop - 1) {
       println("particle " + x + " Position=" + particle(x).Position + " : Cost=" + particle(x).Cost + " : Velocity=" + particle(x).Velocity + " : Best Position=" + particle(x).BestPosition + " : BestCost=" + particle(x).BestCost)
     }
-
-    //  var BestCost = Array.fill(MaxIt,1)(0)//crreate array with one column and MaxIt rows
-
   }
 
 }
